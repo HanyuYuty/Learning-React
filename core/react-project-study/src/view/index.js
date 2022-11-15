@@ -1,5 +1,6 @@
 import React from "react";
 import Home from './Home'
+import Context from './context/'
 
 
 const App = ()=>{
@@ -8,6 +9,7 @@ const App = ()=>{
     return (
         <>
         <Home/>
+        <Context/>
         </>
     )
 };
