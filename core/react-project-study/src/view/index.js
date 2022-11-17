@@ -2,6 +2,7 @@ import React from "react";
 import Home from './Home'
 import Context from './context/'
 import Lifecycle from "./lifecycle";
+import PureComponentTest  from "./PureComponent"
 
 
 const App = ()=>{
@@ -11,7 +12,8 @@ const App = ()=>{
         <>
         {/* <Home/>
         <Context/> */}
-        <Lifecycle></Lifecycle>
+        {/* <Lifecycle></Lifecycle> */}
+        <PureComponentTest></PureComponentTest>
         </>
     )
 };
