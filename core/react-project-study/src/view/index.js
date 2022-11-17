@@ -1,6 +1,7 @@
 import React from "react";
 import Home from './Home'
 import Context from './context/'
+import Lifecycle from "./lifecycle";
 
 
 const App = ()=>{
@@ -8,8 +9,9 @@ const App = ()=>{
 
     return (
         <>
-        <Home/>
-        <Context/>
+        {/* <Home/>
+        <Context/> */}
+        <Lifecycle></Lifecycle>
         </>
     )
 };

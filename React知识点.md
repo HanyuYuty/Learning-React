@@ -89,6 +89,7 @@ componentDidMonth(){
 2、运行阶段
 - UNSAFE_componentWillReceiveProps
   > 父组件传props过来，父组件修改state的时候，子组件中的这个生命周期才会被执行。
+   > 除了组件销毁，父组件或子组件更新一次，该钩子都会被执行。（影响性能?）
 ```js
 import React, { Component } from 'react'
 
@@ -153,3 +154,39 @@ shouldComponentUpdate(nextProps,nextState){
 
    }
 ```
+4、新生命周期(新老生命周期不能共存)
+ - static getDerivedStateFromProps **属于初始化阶段,在render之前**
+  > 静态属性，组件首次渲染就会执行，后续state更新也会执行。必须返回一个对象，并且返回值将会与state合并更新。能获取nextProps&nextState。
+   >由于该钩子的特殊性（无this，也没办法异步操作），一般搭配componentDidUpdate使用
+  ```js
+  state={
+    name:'initial name'
+  }
+  //由于该钩子是同步的，return会立即执行。如果在此尝试异步操作，再修改状态，状态不会被修改成功。
+   static getDerivedStateFromProps(nextProps,nextState){
+       console.log('static getDerivedStateFromProps');
+       //相当于给state添加属性，并且在render之前。
+       return {
+           age:'new age',
+       }
+
+   }
+
+  ```
+- getSnapshotBeforeUpdate
+  > 在组件更新过程中执行，可以在这里记录当时节点的一些信息。**在render之后执行**
+   > 必须要有返回值，并且返回值会作为componentDidUpdate的第三个参数。
+  ```js
+
+     getSnapshotBeforeUpdate(nextProps,nextState){
+    
+         const div =   document.getElementById('list');
+
+            return {
+                scrollHeight:div.scrollHeight,
+                div
+            }
+   }
+
+
+  ```
