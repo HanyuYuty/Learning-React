@@ -3,6 +3,8 @@ import Home from './Home'
 import Context from './context/'
 import Lifecycle from "./lifecycle";
 import PureComponentTest  from "./PureComponent"
+import MyApp from "./Hooks";
+import MyuseContext  from "./Hooks/useContext/";
 
 
 const App = ()=>{
@@ -13,7 +15,9 @@ const App = ()=>{
         {/* <Home/>
         <Context/> */}
         {/* <Lifecycle></Lifecycle> */}
-        <PureComponentTest></PureComponentTest>
+        {/* <PureComponentTest></PureComponentTest> */}
+        {/* <MyApp></MyApp> */}
+        <MyuseContext></MyuseContext>
         </>
     )
 };

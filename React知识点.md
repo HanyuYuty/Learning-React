@@ -14,27 +14,12 @@
   root.render(<App tab="home" />);
   ```
 
-  
-
-二、Hooks
-
-- useState
-  - setState是唯一改变state的方法
-  ```js
-  const [state,setState] = useState()
-  ```
-  - state同步异步的问题(是否马上挂载到dom节点上)
-  
-    **主要区别在于，setState是处于同步还是异步的逻辑中。如果处于同步逻辑中，setState是异步更新state；处于异步逻辑，则setState是同步更新state。**
-  
+二、状态（class组件）
   - 如果处于同步逻辑中，但是又想知道state是否已被更新，可以在setState传入回调函数作为第二个参数。
-  
-  ```js
-  setState(newState,()=>{console.log(state)});
-  ```
-  
-
-
+    
+    ```js
+    setState(newState,()=>{console.log(state)});
+    ```
 
 三、props.children
 
@@ -158,35 +143,155 @@ shouldComponentUpdate(nextProps,nextState){
  - static getDerivedStateFromProps **属于初始化阶段,在render之前**
   > 静态属性，组件首次渲染就会执行，后续state更新也会执行。必须返回一个对象，并且返回值将会与state合并更新。能获取nextProps&nextState。
    >由于该钩子的特殊性（无this，也没办法异步操作），一般搭配componentDidUpdate使用
-  ```js
-  state={
-    name:'initial name'
-  }
-  //由于该钩子是同步的，return会立即执行。如果在此尝试异步操作，再修改状态，状态不会被修改成功。
-   static getDerivedStateFromProps(nextProps,nextState){
-       console.log('static getDerivedStateFromProps');
-       //相当于给state添加属性，并且在render之前。
-       return {
-           age:'new age',
-       }
+```js
+state={
+  name:'initial name'
+}
+//由于该钩子是同步的，return会立即执行。如果在此尝试异步操作，再修改状态，状态不会被修改成功。
+ static getDerivedStateFromProps(nextProps,nextState){
+     console.log('static getDerivedStateFromProps');
+     //相当于给state添加属性，并且在render之前。
+     return {
+         age:'new age',
+     }
 
-   }
+ }
 
-  ```
+```
 - getSnapshotBeforeUpdate
   > 在组件更新过程中执行，可以在这里记录当时节点的一些信息。**在render之后执行**
    > 必须要有返回值，并且返回值会作为componentDidUpdate的第三个参数。
+```js
+
+   getSnapshotBeforeUpdate(nextProps,nextState){
+  
+       const div =   document.getElementById('list');
+
+          return {
+              scrollHeight:div.scrollHeight,
+              div
+          }
+ }
+
+
+```
+
+五、React性能优化
+ - PureComponent
+  > React提供，由内部进行对比state是否有更新。可避免不必要的组件刷新。但不适用于state经常更新的组件，因为state更新一次，PureComponent就要进行一次对比，这样时间会慢很多。
+```js
+ import React, { PureComponent } from 'react'
+export default class PureComponentTest extends PureComponent {
+    state={
+        value:''
+    }
+    render() {
+        console.log('render');
+        return (
+            <div>
+                <button onClick={()=>this.setState({value:111})}>Click</button>
+            </div>
+        )
+    }
+}
+
+```
+
+- shouldComponentUpdate
+  > 添加判断条件，手动阻止不必要的更新。
+
+六、React Hooks
+ - 使用hooks的理由
+  > - 高阶组件为了复用，导致代码层级复杂
+    - 生命周期较多，比较复杂。
+    - 以前的版本，function是无状态组件，如果该组件需要状态，则需要更换为class组件。这样开发成本高。
+
+ - useState
+  - setState是唯一改变state的方法
   ```js
-
-     getSnapshotBeforeUpdate(nextProps,nextState){
-    
-         const div =   document.getElementById('list');
-
-            return {
-                scrollHeight:div.scrollHeight,
-                div
-            }
-   }
-
-
+  const [state,setState] = useState()
   ```
+  - state同步异步的问题(是否马上挂载到dom节点上)
+  
+    **主要区别在于，setState是处于同步还是异步的逻辑中。如果处于同步逻辑中，setState是异步更新state；处于异步逻辑，则setState是同步更新state。**
+ - useEffect
+  > 能达到类似于生命周期的作用，但不是生命周期。可使用多次。
+```js
+  //空依赖?，只运行一次
+  useEffect(()=>{
+
+  },[])
+
+  //根据依赖项进行运行，组件首次渲染会执行，之后只有依赖项更新才会再执行。
+  useEffect(()=>{
+
+  },[value])
+
+  //表示不依赖,将会执行多次
+  useEffect(()=>{
+
+  })
+
+  //等价于生命周期的componentWillOnMount
+  useEffect(()=>{
+
+    return (
+
+    )
+
+  },[])
+
+
+```
+  **与useLayoutEffect区别**
+  > useLayoutEffect是react完成DOM更新之后，马上同步执行useLayoutEffect里面的代码，这样会阻塞页面的渲染。useEffect是等页面渲染完毕之后，才调用代码。
+   > 不过，如果是需要操作DOM，可以使用useLayoutEffect来进行操作，避免在useEffect操作DOM会导致页面抖动。
+- useCallback
+  > 防止因为组件重新渲染，导致方法被重新创建，起到缓存函数作用。只有当依赖项更新之后，函数才会被再次声明。如果依赖项是空数组，那么函数里面读取的，永远是初始化时的状态。
+```js
+ const handleChange =  useCallback(()=>{
+      
+  },[state])
+```
+
+- useMemo
+  > useMemo可以完全取代useCallBack的功能，只要在useMemo的第一个参数返回函数即可。只有依赖项更新之后，才会重新计算并返回执行结果。否则，其他状态更新，会使用之前缓存起来的值来计算，从而达到性能优化。
+  
+- **useMemo和useCallback两个的区别在于,useMemo会执行第一个参数函数，并且把函数执行结果返回出来，但是useCallback不会执行第一个参数，只是把第一个参数函数，返回。**
+- useRef
+  > 可以保存一些不希望被更新的变量，**背后都是闭包实现的**。
+```js
+const ref = useRef()
+
+```
+- useReducer
+- useContext
+  > 根据官网的说法，useContext接收Context对象本身，仍然需要上层组件数中，使用<Context.Provider>为下层组件提供Context。useContext只作接收订阅Context。
+   > 使用useContext之后，一定程度上解决了代码冗余，不需要再使用<Context.Consumer>和一个回调来接收Context。
+```js
+
+export const GlobalContext = React.createContext();
+
+function Global (){
+
+  return <GlobalContext.Provider value={{
+            someValue:''
+          }}>
+
+          <Children></Childdren>
+
+          <GlobalContext.Provider/>
+ 
+function Children (){
+
+  //console.log(value) {someValue:''} 
+  const value = useContext(GlobalContext)
+
+  return (
+    <div>I'm Children Component</div>
+  )
+
+
+}
+
+```
