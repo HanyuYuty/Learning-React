@@ -5,6 +5,7 @@ import Lifecycle from "./lifecycle";
 import PureComponentTest  from "./PureComponent"
 import MyApp from "./Hooks";
 import MyuseContext  from "./Hooks/useContext/";
+import Counter from "./Hooks/useReducer";
 
 
 const App = ()=>{
@@ -17,7 +18,8 @@ const App = ()=>{
         {/* <Lifecycle></Lifecycle> */}
         {/* <PureComponentTest></PureComponentTest> */}
         {/* <MyApp></MyApp> */}
-        <MyuseContext></MyuseContext>
+        {/* <MyuseContext></MyuseContext> */}
+        <Counter></Counter>
         </>
     )
 };
