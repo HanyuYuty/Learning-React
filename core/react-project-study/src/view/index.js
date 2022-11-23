@@ -6,6 +6,7 @@ import PureComponentTest  from "./PureComponent"
 import MyApp from "./Hooks";
 import MyuseContext  from "./Hooks/useContext/";
 import Counter from "./Hooks/useReducer";
+import MyRedux from "./Hooks/MyRedux";
 
 
 const App = ()=>{
@@ -19,7 +20,8 @@ const App = ()=>{
         {/* <PureComponentTest></PureComponentTest> */}
         {/* <MyApp></MyApp> */}
         {/* <MyuseContext></MyuseContext> */}
-        <Counter></Counter>
+        {/* <Counter></Counter> */}
+        <MyRedux></MyRedux>
         </>
     )
 };

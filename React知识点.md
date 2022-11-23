@@ -390,7 +390,6 @@ const init = (payload)=>{
     */
 
 const reducer = (state, action) => {
-    console.log('action',action);
     
     const {type,payload} = action;
     let newState = {...state};
