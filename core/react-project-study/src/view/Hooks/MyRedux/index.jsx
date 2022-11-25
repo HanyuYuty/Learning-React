@@ -4,7 +4,7 @@ import First from './First';
 const reducer = (state,action)=>{
     console.log('action',action);
    
-    let newState = state;
+    let newState = {...state};
     const {type} =action;
 
     switch (type) {
