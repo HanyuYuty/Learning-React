@@ -603,4 +603,26 @@ function Menu(props) {
 }
 
 ```
+- 路由拦截
+  > 对部分路由进行权限限制，根据条件进行路由拦截。
+```js
+ isAuth&&
+            <Route
+            path={route.path}
+            /** 
+             * @param {Object} props 由render函数提供，里面有关于路由的对象。
+             */
+            render={(props)=>{
+            //有token则渲染源路由组件，否则重定向到home路由组件
+            return  localStorage.getItem('token')?<route.component {...props} routes={route?.routes}></route.component>:<Redirect to="/home"></Redirect>
+            }} ></Route>
 
+
+```
+- 纯函数
+  >什么是纯函数?
+    - 固定输入有固定输出,输出值只依赖调用函数时传入的参数。
+    - 执行过程中无任何副作用。(改变数据或传入的参数就是一种副作用，依赖外部可以改变的数据也是副作用)
+    - 不能依赖外部可以改变的数据(作用域外的对象，全局变量)
+    - 不能改变外部状态(不能修改入参和作用域外的变量)
+  
