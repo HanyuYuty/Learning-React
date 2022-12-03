@@ -16,6 +16,7 @@ export default [
         component:Summary,
         label:'Summary',
         render:true,
+        isAuth:true,
         routes:[
             {
                 path:'/summary/first',
