@@ -7,6 +7,7 @@ import MyApp from "./Hooks";
 import MyuseContext  from "./Hooks/useContext/";
 import Counter from "./Hooks/useReducer";
 import MyRedux from "./Hooks/MyRedux";
+import RouterCase from './router'
 
 
 const App = ()=>{
@@ -21,7 +22,8 @@ const App = ()=>{
         {/* <MyApp></MyApp> */}
         {/* <MyuseContext></MyuseContext> */}
         {/* <Counter></Counter> */}
-        <MyRedux></MyRedux>
+        {/* <MyRedux></MyRedux> */}
+        <RouterCase></RouterCase>
         </>
     )
 };

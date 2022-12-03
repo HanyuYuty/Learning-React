@@ -458,3 +458,149 @@ export default ReducerChild
 
 
 ```
+
+七、React-router-dom 路由
+- HashRouter
+  > 哈希路由
+- Route
+  > 匹配到路由之后，就会渲染出对应组件
+```js
+export default [
+    {
+        path:'/home',
+        component:Home
+    },
+    {
+        path:'/summary',
+        component:Summary
+    },
+    {
+        path:'/details',
+        component:Details
+    }
+]
+
+ <HashRouter>
+            {
+                config&&config.map(({path,component})=>(
+                    <Route path={path} component={component}></Route>
+                ))
+            }
+ </HashRouter>
+
+```
+- Redirect
+  > 重定向，从根路由开始，如果路由不匹配将去到指定的路由中
+``` js
+   <HashRouter>
+              {
+                  config&&config.map(({path,component})=>(
+                      <Route path={path} component={component}></Route>
+                  ))
+              }
+              <Redirect from='/' to='/home'></Redirect>
+
+   </HashRouter>
+
+```
+- Switch
+  > 只渲染匹配到的Route或Redirect
+```js
+ <HashRouter>
+            <Switch>
+                {
+                    config&&config.map(({path,component})=>(
+                        <Route path={path} component={component}></Route>
+                    ))
+                }
+                <Redirect from='/' to='/home'></Redirect>
+            </Switch>
+ </HashRouter>
+
+```
+- 精准匹配
+  > 以上都是属于模糊匹配,想要达到精准匹配的效果,可以传入exact。
+```js
+ //只有路径为/时，才会重定向到/home。更加精准
+ <Redirect from='/' to='/home' exact></Redirect>
+
+```
+- 路由嵌套
+```js
+
+import React from 'react'
+import {Route} from 'react-router-dom'
+
+/**
+ * @function 该函数作为中间商,专门处理嵌套路由
+ * @param {Object} route  
+ */
+export default  function HasSubRouter(route) {
+    return (
+            <Route
+            path={route.path}
+            /** 
+             * @param {Object} props 由render函数提供，里面有关于路由的对象。
+             */
+            render={(props)=>{
+
+             return  <route.component {...props} routes={route?.routes}></route.component>
+            }}  
+            ></Route>
+    )
+}
+
+```
+- 动态路由
+  > 通过动态路由传参,而路由方面，也必须配置成动态路由。接收方可用useParams接收。
+```js
+const routes = [{
+        path:'/details/:query',
+        component:Details,
+        label:'Details',
+}];
+//这种方式，就是通过拼接路由的方式进行传参
+ const handlToDetails = (id)=>{
+        history.push({ pathname : `/details/${id}`})
+}
+
+function Details() {
+    let params = useParams();
+    return (
+        <div>
+            Details
+        </div>
+    )
+}
+
+export default Details
+
+```
+
+- React-router-dom的Hooks
+  - useHistory
+   > 实现路由编程式跳转
+```js
+function Menu(props) {
+    const {router} = props;
+    let history = useHistory();
+    const handleJump = (route)=>{
+        history.push(route?.path)
+    }
+
+    return (
+        <>
+             {
+                    router&&router.map((route,index)=>(
+                        <React.Fragment key={index}>
+                        <li onClick={()=>handleJump(route)} >{route.label}</li>
+                        </React.Fragment>
+                    ))
+
+                }
+        </>
+    )
+}
+
+```
+
