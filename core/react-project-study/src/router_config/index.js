@@ -1,7 +1,7 @@
-import Home from "../view/router/Home";
-import Summary from '../view/router/Summary'
-import First from '../view/router/Summary/First'
-import Details from '../view/router/Details'
+import Home from "../view/redux/Home";
+import Summary from '../view/redux/Summary'
+import First from '../view/redux/Summary/First'
+import Details from '../view/redux/Details'
 
 export default [
     {
