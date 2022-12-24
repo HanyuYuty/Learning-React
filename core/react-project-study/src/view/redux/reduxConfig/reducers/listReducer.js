@@ -1,5 +1,6 @@
+const list = JSON.parse(localStorage.getItem('persist:root'))||[];
 export default function listReducer(state={
-    list:[]
+    list
 },action) {
     const newState = {...state};
 

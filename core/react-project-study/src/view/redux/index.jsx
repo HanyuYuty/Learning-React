@@ -4,19 +4,21 @@ import config from '../../router_config'
 import NotFound from './NotFound'
 import HasSubRouter from './HasSubRouter'
 import Menu from './Menu'
-import store from './reduxConfig';
+import {store,persistor} from './reduxConfig';
+import { PersistGate } from 'redux-persist/integration/react'
 
 export const GlobalValue = createContext();
 
 
 function ReduxCom() {
     
+    
     const [menuState,setMenuState] = useState(store.getState().menuReducer.showMenu);
 
     
 
         useEffect(()=>{
-            
+           
             //订阅/监听state变化
             store.subscribe(()=>{
 
@@ -31,18 +33,20 @@ function ReduxCom() {
         
         <Router>
                 <GlobalValue.Provider value={store}>
-                    {menuState&&<Menu router={config}/>}
-                    
-                    <Switch>
-                        {
-                            config&&config.map((route,index)=>(
-                                    <HasSubRouter {...route} key={index}></HasSubRouter>
-                            ))
+                    <PersistGate loading={null} persistor={persistor}>
+                        {menuState&&<Menu router={config}/>}
+                        
+                        <Switch>
+                            {
+                                config&&config.map((route,index)=>(
+                                        <HasSubRouter {...route} key={index}></HasSubRouter>
+                                ))
 
-                        }
-                        <Redirect from='/' to='/home' exact></Redirect>
-                        <Route component={NotFound}></Route>
-                    </Switch>
+                            }
+                            <Redirect from='/' to='/home' exact></Redirect>
+                            <Route component={NotFound}></Route>
+                        </Switch>
+                    </PersistGate>
                 </GlobalValue.Provider>
         </Router>
 
@@ -68,4 +72,15 @@ export default ReduxCom
 
 
 
+// var getItem = Storage.prototype.getItem;
 
+ 
+//     Storage.prototype.getItem = function(key) {
+//        console.log('this',this);
+//         if (this === window.localStorage && key==="extra_data") {
+//             return {};
+//         } else {
+//             // fallback to default action
+//             getItem.apply(this, arguments);
+//         }
+//     }

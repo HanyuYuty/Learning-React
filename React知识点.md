@@ -619,10 +619,95 @@ function Menu(props) {
 
 
 ```
-- 纯函数
+八、 纯函数
   >什么是纯函数?
     - 固定输入有固定输出,输出值只依赖调用函数时传入的参数。
     - 执行过程中无任何副作用。(改变数据或传入的参数就是一种副作用，依赖外部可以改变的数据也是副作用)
     - 不能依赖外部可以改变的数据(作用域外的对象，全局变量)
     - 不能改变外部状态(不能修改入参和作用域外的变量)
   
+九、 Redux
+- 通过redux提供的createStore创建store对象。
+  > - store.subscribe 用于监听state的变化。
+      **取消订阅,使用返回值来取消**
+```js
+    //如果无其他dispatch的情况下，不用担心subscribe会被多次调用，它只有state发生改变时，才会执行。
+       const unSubscribe =  store.subscribe(()=>{
+            setList(store.getState().listReducer.list);
+
+        })
+
+        //取消订阅
+        return ()=> unSubscribe()
+
+```
+    - store.dispacth 用于分发action给reducer。
+    - store.getState 用于获取state。
+- combineReducers
+  > 合并reducer,有时候处理不同的action,并且相关的state并不相关,这个时候,可以分开不同的reducer来进行处理,最后再合并成一个reducer。
+```js
+const reducer = combineReducers({
+    menuReducer,
+    listReducer
+})
+
+const store = legacy_createStore (reducer,applyMiddleware(reduxThunk));
+
+```
+- middleWare
+  > redux本身无法处理异步操作，但是它提供了使用中间件的方式来处理异步。
+ - redux-thunk
+  >生成dispatch时,不在返回一个对象而是返回一个函数的方式。
+```js
+//在这里发送真正的dispatch
+export default function getList() {
+    
+
+/**
+ * @returns {function} 返回一个函数来进行redux的异步操纵,该函数能拿到dispatch参数。
+*/
+    return async (dispatch)  =>{
+
+        const res = await axios({
+            url:"https://m.maizuo.com/gateway?cityId=110100&ticketFlag=1&k=7406159",
+            method:"get",
+            headers:{
+                'X-Client-Info': '{"a":"3000","ch":"1002","v":"5.0.4","e":"16395416565231270166529","bc":"110100"}',
+                'X-Host': 'mall.film-ticket.cinema.list'
+            }
+        })
+
+        dispatch({
+            type:'getList',
+            payload:res.data.data.cinemas
+        })
+
+    }
+}
+
+```
+  
+- react-redux
+  > 
+
+十、ES6模板字符串的新用法
+```js
+
+callBack`some data`
+
+/**
+ * @param {String} params //可使用模板字符串新用法
+ * 
+  */
+function callBack(params) {
+//params 接收则会变成数组
+
+
+
+  return params[0]
+  
+}
+
+```
+
+十、React扩展

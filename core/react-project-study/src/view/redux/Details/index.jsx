@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import {useParams,useHistory} from 'react-router-dom';
-import store from '../reduxConfig';
+import {store} from '../reduxConfig';
 import {SHOWMENU,HIDEMENU} from '../reduxConfig/actionCreator/actionCreator'
 
 function Details() {
