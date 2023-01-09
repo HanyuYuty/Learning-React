@@ -11,6 +11,9 @@ export default function listReducer(state={
         case 'change-list':
         newState.list = action.payload
         return newState;
+        case 'clear-list':
+        newState.list  = [];
+        return newState;
         case 'edit-list':
         newState.list = action.payload;
         return newState;

@@ -14,7 +14,7 @@ import AntdHome from './antd'
 
 
 
-import { BrowserRouter as Router } from 'react-router-dom';
+import { BrowserRouter as Router,Route } from 'react-router-dom';
 
 const App = ()=>{
 
@@ -31,7 +31,8 @@ const App = ()=>{
             {/* <MyRedux></MyRedux> */}
             {/* <RouterCase></RouterCase> */}
             {/* <ReduxCom></ReduxCom> */}
-            <AntdHome></AntdHome>
+            <Route path="/" render={(route)=>(<AntdHome {...route}></AntdHome>)}></Route>
+
         </Router>
     )
 };

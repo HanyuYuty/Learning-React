@@ -9,12 +9,16 @@ import createSagaMiddleware from 'redux-saga'
 
 import listReducer from './listReducer'
 import actionSaga from './actionSaga'
+import cityListReducer from './cityName'
+import districtListReducer from './district'
 
 
 
 //reducers
 const reducers = combineReducers({
-    listReducer
+    listReducer,
+    cityListReducer,
+    districtListReducer
 })
 
 //config redux-saga

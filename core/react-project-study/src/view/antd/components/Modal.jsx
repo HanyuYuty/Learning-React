@@ -16,11 +16,13 @@ function Modal(props) {
 
 
    const deepCurrentData = useMemo(()=>cloneDeep(currentData),[currentData]);
+   
 
     const onFinish = (values) => {
        if(currentKey.current){
            const currentIndex =  cinemasList.findIndex(item=>item.cinemaId===currentKey.current);
            cinemasList[currentIndex] = {...cinemasList[currentIndex],...values};
+           console.log('cinemasList',cinemasList);
            EditList(cinemasList)
 
        }else{
@@ -37,8 +39,7 @@ function Modal(props) {
 
 
     const renderComponent = useCallback(()=>{
-       
-
+     
       return  Object.keys(deepCurrentData).map((item,index)=>{
                 return  (
                     <React.Fragment key={index}>
@@ -60,8 +61,10 @@ function Modal(props) {
                                                 return   value.length>15? Promise.reject(new Error('overlength')):Promise.resolve()
                                             case 'address':
                                                 return value.length>30?Promise.reject(new Error('overlength')):Promise.resolve()
-                                            default:
+                                            case 'businessTime':
                                                 return value&&value.includes('-')?Promise.resolve():Promise.reject(new Error('please input '))
+                                            default:
+                                                return value?Promise.resolve():Promise.reject(new Error('please input the field'))
                                         }
                                     }
                                         
@@ -69,7 +72,7 @@ function Modal(props) {
                             ]}
                             // key={index}
                         >
-                            <Input />
+                            <Input maxLength={5}/>
                     </Form.Item>}
                 </React.Fragment>
                 )
