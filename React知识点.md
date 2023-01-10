@@ -295,3 +295,419 @@ function Children (){
 }
 
 ```
+- useReducer
+```js
+import React, { useCallback, useReducer } from 'react';
+
+
+    /** 
+     @param {object} state from useReducer the second arg
+     @param {object} action action.type is from useReducer dispatch& action.type is required
+    */
+
+const reducer = (state, action) => {
+    
+    const {type} = action;
+    let newState = {...state};
+    switch (type) {
+        case 'add':
+            newState.count++
+            return newState;
+        case 'decrement':
+            newState.count--
+            return newState
+    
+        default:
+          return state
+    }
+    
+
+}
+
+//初始化state，通过useReducer传到state中。
+const initialState = {
+    count:0
+}
+
+function Counter() {
+
+    //相当于一个小型的redux
+    const [state,dispatch] = useReducer(reducer,initialState);
+
+
+    const handleDispatch = useCallback((type)=>{
+
+        switch (type) {
+            case 'add':
+                dispatch({
+                    type
+                })
+                break;
+            case 'decrement':
+                dispatch({
+                    type
+                })
+        }
+
+    },[state])
+
+
+
+    return (
+        <div>
+            <button onClick={()=>handleDispatch('decrement')}>-</button>
+            {state.count}
+            <button onClick={()=>handleDispatch('add')}>+</button>
+        </div>
+    )
+}
+
+export default Counter
+
+
+```
+  - 使用init来进行惰性初始化init
+```js
+import React, { useCallback, useReducer } from 'react';
+
+/** 
+ * @function init 如果useReducer传入的第三个参数是一个函数，那么它可作为初始化state。可以处理更加复杂的state。
+ * @param {Object} state from useReducer the second arg ⭐如果不在其他地方调用该方法，第一个参数就是useReducer的第二个参数。
+ * @returns {Object} required,返回值将会作为state返回。
+ * 
+*/
+const init = (payload)=>{
+    
+    return payload
+
+
+}
+
+
+    /** 
+     @param {object} state from useReducer the second arg
+     @param {object} action action.type is from useReducer dispatch& action.type is required
+    */
+
+const reducer = (state, action) => {
+    
+    const {type,payload} = action;
+    let newState = {...state};
+    switch (type) {
+        case 'add':
+            newState.count++
+            return newState;
+        case 'decrement':
+            newState.count--
+            return newState;
+        case 'reset':
+            return init(payload)
+
+        default:
+          return state
+    }
+    
+
+}
+
+
+
+function ReducerChild({initialState}) {
+
+    //相当于一个小型的redux
+    const [state,dispatch] = useReducer(reducer,initialState,init);
+
+
+
+    const handleDispatch = useCallback((type,payload)=>{
+
+        switch (type) {
+            case 'add':
+                dispatch({
+                    type
+                })
+                break;
+            case 'decrement':
+                dispatch({
+                    type
+                })
+                break;
+            case 'reset':
+                dispatch({
+                    type,
+                    payload
+                })
+        }
+
+    },[state])
+
+
+
+    return (
+        <div>
+            <button onClick={()=>handleDispatch('decrement')}>-</button>
+            {state.count}
+            <button onClick={()=>handleDispatch('add')}>+</button>
+            <button onClick={()=>handleDispatch('reset',initialState)}>reset</button>
+        </div>
+    )
+}
+
+export default ReducerChild
+
+
+
+```
+
+七、React-router-dom 路由
+- HashRouter
+  > 哈希路由
+- Route
+  > 匹配到路由之后，就会渲染出对应组件
+```js
+export default [
+    {
+        path:'/home',
+        component:Home
+    },
+    {
+        path:'/summary',
+        component:Summary
+    },
+    {
+        path:'/details',
+        component:Details
+    }
+]
+
+ <HashRouter>
+            {
+                config&&config.map(({path,component})=>(
+                    <Route path={path} component={component}></Route>
+                ))
+            }
+ </HashRouter>
+
+```
+- Redirect
+  > 重定向，从根路由开始，如果路由不匹配将去到指定的路由中
+``` js
+   <HashRouter>
+              {
+                  config&&config.map(({path,component})=>(
+                      <Route path={path} component={component}></Route>
+                  ))
+              }
+              <Redirect from='/' to='/home'></Redirect>
+
+   </HashRouter>
+
+```
+- Switch
+  > 只渲染匹配到的Route或Redirect
+```js
+ <HashRouter>
+            <Switch>
+                {
+                    config&&config.map(({path,component})=>(
+                        <Route path={path} component={component}></Route>
+                    ))
+                }
+                <Redirect from='/' to='/home'></Redirect>
+            </Switch>
+ </HashRouter>
+
+```
+- 精准匹配
+  > 以上都是属于模糊匹配,想要达到精准匹配的效果,可以传入exact。
+```js
+ //只有路径为/时，才会重定向到/home。更加精准
+ <Redirect from='/' to='/home' exact></Redirect>
+
+```
+- 路由嵌套
+```js
+
+import React from 'react'
+import {Route} from 'react-router-dom'
+
+/**
+ * @function 该函数作为中间商,专门处理嵌套路由
+ * @param {Object} route  
+ */
+export default  function HasSubRouter(route) {
+    return (
+            <Route
+            path={route.path}
+            /** 
+             * @param {Object} props 由render函数提供，里面有关于路由的对象。
+             */
+            render={(props)=>{
+
+             return  <route.component {...props} routes={route?.routes}></route.component>
+            }}  
+            ></Route>
+    )
+}
+
+```
+- 动态路由
+  > 通过动态路由传参,而路由方面，也必须配置成动态路由。接收方可用useParams接收。
+```js
+const routes = [{
+        path:'/details/:query',
+        component:Details,
+        label:'Details',
+}];
+//这种方式，就是通过拼接路由的方式进行传参
+ const handlToDetails = (id)=>{
+        history.push({ pathname : `/details/${id}`})
+}
+
+function Details() {
+    let params = useParams();
+    return (
+        <div>
+            Details
+        </div>
+    )
+}
+
+export default Details
+
+```
+
+- React-router-dom的Hooks
+  - useHistory
+   > 实现路由编程式跳转
+```js
+function Menu(props) {
+    const {router} = props;
+    let history = useHistory();
+    const handleJump = (route)=>{
+        history.push(route?.path)
+    }
+
+    return (
+        <>
+             {
+                    router&&router.map((route,index)=>(
+                        <React.Fragment key={index}>
+                        <li onClick={()=>handleJump(route)} >{route.label}</li>
+                        </React.Fragment>
+                    ))
+
+                }
+        </>
+    )
+}
+
+```
+- 路由拦截
+  > 对部分路由进行权限限制，根据条件进行路由拦截。
+```js
+ isAuth&&
+            <Route
+            path={route.path}
+            /** 
+             * @param {Object} props 由render函数提供，里面有关于路由的对象。
+             */
+            render={(props)=>{
+            //有token则渲染源路由组件，否则重定向到home路由组件
+            return  localStorage.getItem('token')?<route.component {...props} routes={route?.routes}></route.component>:<Redirect to="/home"></Redirect>
+            }} ></Route>
+
+
+```
+八、 纯函数
+  >什么是纯函数?
+    - 固定输入有固定输出,输出值只依赖调用函数时传入的参数。
+    - 执行过程中无任何副作用。(改变数据或传入的参数就是一种副作用，依赖外部可以改变的数据也是副作用)
+    - 不能依赖外部可以改变的数据(作用域外的对象，全局变量)
+    - 不能改变外部状态(不能修改入参和作用域外的变量)
+  
+九、 Redux
+- 通过redux提供的createStore创建store对象。
+  > - store.subscribe 用于监听state的变化。
+      **取消订阅,使用返回值来取消**
+```js
+    //如果无其他dispatch的情况下，不用担心subscribe会被多次调用，它只有state发生改变时，才会执行。
+       const unSubscribe =  store.subscribe(()=>{
+            setList(store.getState().listReducer.list);
+
+        })
+
+        //取消订阅
+        return ()=> unSubscribe()
+
+```
+    - store.dispacth 用于分发action给reducer。
+    - store.getState 用于获取state。
+- combineReducers
+  > 合并reducer,有时候处理不同的action,并且相关的state并不相关,这个时候,可以分开不同的reducer来进行处理,最后再合并成一个reducer。
+```js
+const reducer = combineReducers({
+    menuReducer,
+    listReducer
+})
+
+const store = legacy_createStore (reducer,applyMiddleware(reduxThunk));
+
+```
+- middleWare
+  > redux本身无法处理异步操作，但是它提供了使用中间件的方式来处理异步。
+ - redux-thunk
+  >生成dispatch时,不在返回一个对象而是返回一个函数的方式。
+```js
+//在这里发送真正的dispatch
+export default function getList() {
+    
+
+/**
+ * @returns {function} 返回一个函数来进行redux的异步操纵,该函数能拿到dispatch参数。
+*/
+    return async (dispatch)  =>{
+
+        const res = await axios({
+            url:"https://m.maizuo.com/gateway?cityId=110100&ticketFlag=1&k=7406159",
+            method:"get",
+            headers:{
+                'X-Client-Info': '{"a":"3000","ch":"1002","v":"5.0.4","e":"16395416565231270166529","bc":"110100"}',
+                'X-Host': 'mall.film-ticket.cinema.list'
+            }
+        })
+
+        dispatch({
+            type:'getList',
+            payload:res.data.data.cinemas
+        })
+
+    }
+}
+
+```
+  
+- react-redux
+  > 
+
+十、ES6模板字符串的新用法
+```js
+
+callBack`some data`
+
+/**
+ * @param {String} params //可使用模板字符串新用法
+ * 
+  */
+function callBack(params) {
+//params 接收则会变成数组
+
+
+
+  return params[0]
+  
+}
+
+```
+
+十、React扩展
