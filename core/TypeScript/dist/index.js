@@ -34,3 +34,35 @@ function handleRequest(url, method) {
 }
 const req = { url: 'https://example.com', method: 'GET' };
 handleRequest(req.url, req.method);
+function NotNull(params) {
+    console.log(params.toUpperCase());
+    //等价于if
+    if (params) {
+        console.log(params.toUpperCase());
+    }
+}
+NotNull('hahahaha');
+function move(animal) {
+    if ("swim" in animal) {
+        return animal.swim();
+    }
+    return animal.fly();
+}
+move({
+    fly: () => { }
+});
+// ts源码
+var Direction;
+(function (Direction) {
+    Direction[Direction["Up"] = 1] = "Up";
+    Direction[Direction["Down"] = 2] = "Down";
+    Direction[Direction["Left"] = 3] = "Left";
+    Direction[Direction["Right"] = 4] = "Right";
+})(Direction || (Direction = {}));
+console.log(Direction.Up); // 1
+function get_List(params) {
+}
+get_List({
+    id: 11111,
+    elseProps: 'some data'
+});

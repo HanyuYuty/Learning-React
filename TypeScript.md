@@ -27,6 +27,12 @@ function getData(params:string,data:Date) {
   let arr:Array<object> = [{}];
   
   ```
+  - 元组
+    > 固定数组的长度
+    ```tsx
+    let newArr:[number,string];
+    newArr = [999,'1111'];
+    ```
   - any 任何类型都是合法的,它禁用所有的类型检查。
   - 函数
   > 一般函数返回值无需定义类型,因为ts会根据上下文值，进行推算。除非有特殊情况。
@@ -38,7 +44,7 @@ function getData(params:string,data:Date) {
     })
   
   ```
-    - 函数
+  - 函数
       - void 该函数无返回值。
       
         ```tsx
@@ -69,7 +75,7 @@ function getData(params:string,data:Date) {
   - 对象类型
   > 对象字面量只能指定已知属性。
   ```tsx
-   // count为可选传入,id为必须传入
+   // count为可选传入,id为必须传入，且不可添加多其他属性
   function getList(params:{id:number,count?:string}) {
     
   }
@@ -80,8 +86,38 @@ function getData(params:string,data:Date) {
       elseKey:[] //报错
   })
   
-  ```
 
+  //只是对对象某个属性定义类型，其他属性不作定义（可添加其他属性）
+  //[propName:string]:any 其他key为string（对象中的key就是string），值为any即可
+   type Params ={id:number,count?:string,[propName:string]:any};
+    function get_List(params:Params) {
+    
+    }
+
+    get_List({
+        id:11111,
+        elseProps:'some data'
+    })
+  
+  ```
+  - unknown
+   > 未知类型,unknown类型的变量，不能直接赋值给其他类型的变量
+   ```tsx
+
+   let a: unknown ;
+    a = 'string';
+
+
+  //不能将类型“unknown”分配给类型“string”。
+    let e:string
+    ❌e = a 
+
+     let e:string
+    ✔ e = a as string 
+
+   ```
+- never
+  > 该类型表示,永远不会返回值。
 - 联合类型
 
   > 表示可有多个类型
@@ -272,4 +308,48 @@ function getData(params:string,data:Date) {
     handleRequest(req.url, req.method );
 
    ```
+
+  - 非空断言运算符(!)
+   > 告诉Ts该值不是null或者undefined
+   ```tsx
+   
+   function NotNull(params?:string | null) {
+     //params可能为 “null” 或“未定义”。
+    //❌console.log(params.toUpperCase());
+     ✔console.log(params!.toUpperCase());
+
+      //等价于if
+      if(params){
+          console.log(params.toUpperCase());
+      }
+    }
+
+    NotNull('hahahaha')
+
+
+   ```
   - <type>
+    ```tsx
+
+    let someValue: unknown = "this is a string";
+    let strLength: number = (<string>someValue).length;
+
+    ```
+  - 枚举
+  > 其实枚举就是在一个类里定义几个静态变量，每个变量都是这个类的实例。比如说，类Human有两个静态变量：Man,Woman，每一个变量都是Human类的实例。用的时候就直接写Human.Man，Human.Woman，用的时候就直接用Human.Man.hasXJJ()或者Human.Woman.hasXJJ()方法，这不就是枚举么。作用么，其实就是提供常量。
+  ```tsx
+
+  // ts源码
+  enum Direction {
+      Up = 1,
+      Down,
+      Left,
+      Right,
+      }
+      console.log(Direction.Up) // 1
+      console.log(Direction.Down) // 2
+      console.log(Direction.Left) // 3
+      console.log(Direction.Right) // 4
+
+
+  ```

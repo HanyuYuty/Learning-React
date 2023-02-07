@@ -19,9 +19,10 @@ import { connect } from 'react-redux';
 import { useHistory,Switch,Route } from 'react-router-dom';
 import routerConfig from './router_config';
 import RouterComponent from './components/RouterComponent';
+import PrizeItem from './PrizeItem';
 
 
-
+import axios from 'axios';
 
 
 const { Header, Content, Footer, Sider } = Layout;
@@ -50,6 +51,15 @@ const AntdHome = (props) => {
   const [collapsed, setCollapsed] = useState(false);
   const [isShowModal,setIsShowModal] = useState(false);
   const [currentData,setCurrentData] = useState({})
+
+const [renderArr,setRenderArr] = useState([{
+  id:120100,
+},{
+  id:130400
+},{
+  id:130500
+}])
+
   const {
     token: { colorBgContainer },
   } = theme.useToken();
@@ -62,6 +72,21 @@ const AntdHome = (props) => {
   }
 
 
+  
+
+  // const getComdStock=async (record)=>{
+
+  //   const res2 = await axios({
+  //       url:`https://m.maizuo.com/gateway?cityId=${record}&ticketFlag=1&k=7406159`,
+  //       method:"get",
+  //       headers:{
+  //           'X-Client-Info': '{"a":"3000","ch":"1002","v":"5.0.4","e":"16395416565231270166529","bc":"110100"}',
+  //           'X-Host': 'mall.film-ticket.cinema.list'
+  //       }
+  //       })
+
+  //       return res2
+  //   }
 
 
   return (
@@ -146,6 +171,18 @@ const AntdHome = (props) => {
                       {isShowModal && (
                           <Modal setIsShowModal={setIsShowModal} currentData={currentData}></Modal>
                       )}
+
+                      {
+                        renderArr.map((actId)=>{
+
+                         
+                    
+                          return <PrizeItem record={actId.id} key={actId.id}></PrizeItem>
+                        })
+                      }
+                      <button onClick={()=>{
+                        setRenderArr([{id:231000},...renderArr])
+                      }}>Add</button>
                   </Layout>
               </Layout>
           </PersistGate>

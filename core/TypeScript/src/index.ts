@@ -91,3 +91,59 @@ function handleRequest(url: string, method: 'GET' | 'POST' | 'GUESS') {
   
 const req = { url: 'https://example.com', method: 'GET'  as const} 
 handleRequest(req.url, req.method );
+
+
+
+function NotNull(params?:string | null) {
+    console.log(params!.toUpperCase());
+
+    //等价于if
+    if(params){
+        console.log(params.toUpperCase());
+    }
+    
+    
+}
+
+NotNull('hahahaha')
+
+
+type Fish = { swim: () => void  } ;
+type Bird = { fly: () => void };
+type Human = { swim?: () => void; fly?: () => void };
+
+
+function move(animal: Fish | Bird | Human  ) {
+
+    if ("swim" in animal) {
+        return (animal as Fish).swim();
+    }
+    return (animal as Bird).fly();
+}
+
+move({
+    fly:()=>{}
+})
+
+
+// ts源码
+enum Direction {
+    Up = 1,
+    Down,
+    Left,
+    Right,
+    }
+    console.log(Direction.Up) // 1
+
+
+    type Params ={id:number,count?:string,[propName:string]:any}
+    function get_List(params:Params) {
+    
+    }
+
+    get_List({
+        id:11111,
+        elseProps:'some data'
+    })
+
+
