@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkwebpack_code=self.webpackChunkwebpack_code||[]).push([[179],{640:function(o,e,n){function c(...o){console.log("arg",o)}n.d(e,{Z:function(){return c}})},801:function(o,e,n){var c,l=n(640);n.e(644).then(n.bind(n,924)).then((o=>{console.log("res",o.default(1,2))})),console.log((c=[3,4,5],console.log((0,l.Z)()),c.reduce(((o,e)=>o+e),0))),console.log("env","production")}},function(o){o(o.s=801)}]);
+//# sourceMappingURL=main.6efefee6.js.map
