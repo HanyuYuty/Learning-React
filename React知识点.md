@@ -14,6 +14,21 @@
   root.render(<App tab="home" />);
   ```
 
+- setState的区别
+  - 18版本以上，在setTimeout、setInterval以及原生事件中，会有批量更新。
+  ```js
+     <Button onClick={()=>{
+            setTimeout(()=>{
+                setTestSet(testSet+1)
+                console.log(testSet);
+                setTestSet(testSet+1)
+                console.log(testSet);
+            },0)
+           
+           }}>TEST</Button>
+
+  ```
+
 二、状态（class组件）
   - 如果处于同步逻辑中，但是又想知道state是否已被更新，可以在setState传入回调函数作为第二个参数。
     
@@ -711,3 +726,6 @@ function callBack(params) {
 ```
 
 十、React扩展
+- setState、useState的区别
+  - setState在18以前的版本中，合成事件以及钩子函数中会有批量更新，setTimeout、setInterval&原生事件不会有批量更新。18以后即使是setTimeout、setInterval&原生事件都会有批量更新。
+  - useState无论是合成事件还是原生事件，即使在setTimeout中都是会批量更新。

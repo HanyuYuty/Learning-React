@@ -2137,3 +2137,13 @@ console.log(a)//
    });
 
 ```
+
+##### 对react组件进行解耦
+- render函数，把需要渲染的内容分割成子组件去处理。
+- 通过props传递数据
+- 使用HOC，使组件复用性变强。
+
+
+##### setState、useState的区别
+  - setState在18以前的版本中，合成事件以及钩子函数中会有批量更新，setTimeout、setInterval&原生事件不会有批量更新。18以后即使是setTimeout、setInterval&原生事件都会有批量更新。
+  - useState无论是合成事件还是原生事件，即使在setTimeout中都是会批量更新。

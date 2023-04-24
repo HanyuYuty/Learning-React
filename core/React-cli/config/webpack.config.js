@@ -117,6 +117,7 @@ module.exports = {
         //💥💥💥💥'@'符号比较特殊?导致eslint也需要配置（详情看eslint文件），否则会报错。Can't resolve '@/XXX/YYY'
         alias: {
             '@': path.resolve(__dirname, '../src'),
+            'Hooks':path.resolve(__dirname,'../src/Hooks')
           },
     },
 
@@ -198,3 +199,5 @@ module.exports = {
     mode: isProduction?'production':'development',
     devtool: isProduction?'source-map': "cheap-module-source-map",
 };
+
+

@@ -1,5 +1,7 @@
 import React from "react";
 import Page from "./pages";
+import apis from 'Hooks/useApi'
+
 
 
 export default function App (){
@@ -10,7 +12,7 @@ export default function App (){
        <>
        
        <h1>App</h1>
-        <Page />
+        <Page apis={apis()}/>
        
        </>
     )

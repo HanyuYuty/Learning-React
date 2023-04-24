@@ -1,9 +1,11 @@
 import React, { useCallback, useEffect, useState,useMemo } from 'react';
 import { Space, Table, Button, Select } from 'antd';
+import axios from 'axios'; 
 
 import { connect } from 'react-redux';
 import Modal from './components/Modal';
 import { useRef } from 'react';
+import { outputPDF } from './utils/outPutPdf';
 
 function TableList(props) {
     const {
@@ -23,6 +25,8 @@ function TableList(props) {
     const [isEdit, setIsEdit] = useState(false);
     const [country,setCountry] = useState('')
     const [district,setDistrict] = useState('');
+
+    const [testSet,setTestSet] = useState(0)
 
 
     const data = useRef('')
@@ -119,6 +123,7 @@ function TableList(props) {
         //     clearList()
         // }
 
+
     }, []);
 
     useEffect(()=>{
@@ -128,6 +133,7 @@ function TableList(props) {
     // const handleGetList = useCallback(()=>cinemasList.length<0?getList():null,[])
 
     const AddList = useCallback(() => {
+        
         setIsShowModal(true);
         getCurrentData({
             name: '',
@@ -139,6 +145,28 @@ function TableList(props) {
     return (
  
         <div>
+           <h1>{testSet}</h1>
+           <Button onClick={async()=>{
+               const res = await axios({
+                url:"https://m.maizuo.com/gateway?k=1171248",
+                method:"get",
+                headers:{
+                    'X-Client-Info': '{"a":"3000","ch":"1002","v":"5.2.1","e":"1645865382277390462812161"}',
+                    'X-Host': 'mall.film-ticket.city.list'
+                }
+            })
+            setTestSet(res.data.msg)
+            console.log(testSet);
+            setTestSet(res.data.msg)
+            console.log(testSet);
+            // setTimeout(()=>{
+            //     setTestSet(testSet+1)
+            //     console.log(testSet);
+            //     setTestSet(testSet+1)
+            //     console.log(testSet);
+            // },0)
+           
+           }}>TEST</Button>
             <Select
                 options={cityList}
                 style={{
@@ -177,6 +205,20 @@ function TableList(props) {
             >
                 Add
             </Button>
+            <Button onClick={async()=>{
+                const table = document.querySelector('.ant-table');
+                const header = document.querySelector('header');
+                const footer = document.querySelector('footer');
+              try {
+                await  outputPDF({element:table,header,footer})
+              } catch (error) {
+                  console.log(error);
+                console.log(typeof error === 'string' ? error : JSON.stringify(error))
+              }
+
+                 
+            }}>导出</Button>
+             <header>头</header>
             <Table
                 columns={columns}
                 dataSource={filterList}
@@ -187,6 +229,11 @@ function TableList(props) {
                 }}
                 rowClassName="editable-row"
             />
+            <footer>尾巴
+                <div>
+                第<div className="pdf-footer-page"></div>页 / 第<div className="pdf-footer-page-count"></div>页
+                </div>
+            </footer>
         </div>
     );
 }

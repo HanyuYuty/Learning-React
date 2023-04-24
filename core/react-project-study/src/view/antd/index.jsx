@@ -52,6 +52,9 @@ const AntdHome = (props) => {
   const [isShowModal,setIsShowModal] = useState(false);
   const [currentData,setCurrentData] = useState({})
 
+
+  const [_,setState] = useState(true)
+
 const [renderArr,setRenderArr] = useState([{
   id:120100,
 },{
@@ -114,6 +117,7 @@ const [renderArr,setRenderArr] = useState([{
                       }}/>
                   </Sider>
                   <Layout className="site-layout">
+                    <button onClick={()=>setState(!_)}>Click</button>
                       <Header
                           style={{
                               padding: 0,

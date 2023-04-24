@@ -4,7 +4,9 @@ import {Button} from 'antd';
 import Home from '@/pages/Home';
 import About from '@/pages/About';
 
-function Page() {
+function Page(props) {
+
+    const {apis} = props
     return (
         <>
         <Button type='primary' >按钮</Button>
@@ -18,8 +20,8 @@ function Page() {
             </ul>
 
             <Routes>
-                <Route element={<Home />} path='/home'></Route>
-                <Route element={<About />} path="/about"></Route>
+                <Route element={<Home {...apis}/>} path='/home' ></Route>
+                <Route element={<About  {...apis}/>} path="/about"></Route>
             </Routes>
         </>
     );
